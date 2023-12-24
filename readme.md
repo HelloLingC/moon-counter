@@ -4,6 +4,8 @@ English | [中文](readme_cn.md)
 
 A fast, simple & easy-to-use webpage visitor counter, but not only limited to websites.
 
+![](https://counter.moonlab.top/counter/img?id=github-moon-counter)
+
 With a visual admin panel, put Moon-Counter at every corner
 
 ##### 🚀 Fast and Simple
@@ -55,7 +57,7 @@ Add the following code to where you wanna place a text counter.
 
 # Self Host
 
-Download the compressed file in Release Page.
+Download the compressed file in [Release Page](/releases).
 
 1.Decompress
 
@@ -66,13 +68,13 @@ $ tar -xf moon-counter.tar.gz
 2.Adjust the config.yaml
 
 ```bash
-nano config.yaml
+$ nano config.yaml
 ```
 
 3.Run
 
 ```bash
-$ moon-counter
+$ ./moon-counter
 ```
 
 For more details and configuration help, Please visit [my blog](https://mini.moonlab.top/post/20231224-14/)

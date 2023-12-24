@@ -15,16 +15,10 @@ import (
 
 const SVG_TEMPLATE = `<?xml version="1.0" encoding="UTF-8"?>
 <svg width="%d" height="%d" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="image-rendering: pixelated;">
-    <title>Moon-Counter</title>
-    <g>
-      %s
-    </g>
-</svg>
-`
+    <title>Moon-Counter</title><g>%s</g>
+</svg>`
 
-const NUMBER_TEMPLATE = `
-<image x="%d" y="0" width="%d" height="%d" xlink:href="data:image/%s;base64,%s" />
-`
+const NUMBER_TEMPLATE = `<image x="%d" y="0" width="%d" height="%d" xlink:href="data:image/%s;base64,%s" />`
 
 type Image struct {
 	data   *string
