@@ -48,8 +48,8 @@ func LoadImgage(path string) {
 	images = append(images, image)
 }
 
-func LoadAssets(theme string) {
-	err := filepath.Walk(fmt.Sprintf("assets/%s", theme), func(path string, info os.FileInfo, err error) error {
+func LoadAssets(path string) {
+	err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
