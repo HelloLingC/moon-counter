@@ -1,12 +1,16 @@
 # Moon-Counter Config 
-# See config docs: 
+# See config docs: https://mini.moonlab.top/post/20231224-14/
 host: localhost:3800
-port: 3800
+listen: 3800
 cors: true
-imgTheme: rule34
+img_theme: rule34
 hostnames: 
   - moonlab.top
+  # Remove localhost in production
   - localhost
+
+error_log: error.log
+
 db:
   type: sqlite
   dbname: moon.db

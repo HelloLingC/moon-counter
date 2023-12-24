@@ -2,10 +2,11 @@ package common
 
 type Config struct {
 	Host      string   `yaml:"host"`
-	Port      int      `yaml:"port"`
-	ImgTheme  string   `yaml:"imgTheme"`
+	Port      int      `yaml:"listen"`
+	ImgTheme  string   `yaml:"img_yheme"`
 	Cors      bool     `yaml:"cors"`
 	Hostnames []string `yaml:"hostnames"`
+	ErrorLog  string   `yaml:"error_log"`
 	DBCfg     DBConfig `yaml:"db"`
 }
 

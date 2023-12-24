@@ -1,34 +1,46 @@
 # Moon-Counter
 
+English | [中文](readme_cn.md)
+
 A fast, simple & easy-to-use webpage visitor counter, but not only limited to websites.
 
 With a visual admin panel, put Moon-Counter at every corner
 
-🚀 Fast and Simple
+##### 🚀 Fast and Simple
 
-🎉 Self-Host & Easy-To-Use
-Deploy with only one file, zero dependency. No annoying complex installation
+##### 🎉 Easy Deployment
 
-🔒 Secure
-Support [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS), make it hard for strangers to use your self-host service without permisson
+Run counter server with only one binary file, zero dependency. No annoying complex installation
 
-🌟 SQLite Database.
+##### 🔒 Secure [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) Support
+
+ Make it hard for strangers to use your counter service without permisson to tally for them
+
+##### 🌟 SQLite Database.
+
 Reeeallly easy to control and move
-
-Two modes to choose, text & image
 
 ## Image Counter
 
-```
-# Markdown style
-# Make sure id arg is unique for each webpage
-# You can use this in Github Profile
-![]()[https://yoursite.com/counter/img?id=uniqueID]
+#### Common Method
+Make sure id argument is unique for every webpage
 
-# HTML style
-# Unique id arg is automatically handled
-# If cors is on, you should only use image counter in this way
-<script src="https://yoursite.com/moon-counter/js/img"></script>
+```
+# You can use this in Github Profile
+![](https://yoursite.com/counter/img?id=uniqueID)
+
+<img src="//yoursite.com/counter/img?id=uniqueID"></img>
+```
+
+#### Secure CORS
+
+Unique id arg is automatically handled
+
+If cors is on in the config file, server will check whether the request origin is vaild, and return cors resources.
+In this case, you should only use image counter in this way
+
+```
+<script src="//yoursite.com/moon-counter/js/img"></script>
 <img id="moon-counter-img"></img>
 ```
 
@@ -37,7 +49,7 @@ Two modes to choose, text & image
 Add the following code to where you wanna place a text counter.
 
 ```
-<script src="https://yoursite.com/moon-counter/js"></script>
+<script src="//yoursite.com/moon-counter/js"></script>
 <span id="moon-counter"></span>
 ```
 
@@ -63,12 +75,12 @@ nano config.yaml
 $ moon-counter
 ```
 
-For more details and configuration help, Please visit [my blog](https://mini.moonlab.top/)
+For more details and configuration help, Please visit [my blog](https://mini.moonlab.top/post/20231224-14/)
 
 # Credits
 
 
-# Lisence
+# License
 
 MIT
 

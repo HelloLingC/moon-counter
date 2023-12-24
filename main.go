@@ -33,7 +33,7 @@ func main() {
 	db.InitDB(config.DBCfg.Dbname)
 	defer db.CloseDB()
 
-	server.LoadAssets("rule34")
+	server.LoadAssets(config.ImgTheme)
 
 	s := server.NewInstance(&config, db)
 	s.Start()

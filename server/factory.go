@@ -70,12 +70,14 @@ func LoadAssets(theme string) {
 }
 
 func BuildCounterImg(c string) string {
-	log.Println("c:", c)
+	iTimes := 6 - len(c)
+	for i := 0; i < iTimes; i++ {
+		c = "0" + c
+	}
 	var numberTempletes string
 	// Todo: Handle a situation if each image's dimentions are different
 	for i, sDigit := range c {
 		digit := strings.Index("0123456789", string(sDigit))
-		log.Println("d:", digit)
 		img := images[digit]
 		// Todo: Add more image type support, exclude .gif
 		numberTempletes += fmt.Sprintf(NUMBER_TEMPLATE, i*img.width, img.width, img.height, "gif", *img.data)
