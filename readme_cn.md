@@ -4,23 +4,27 @@
 
 快速，简单 & 易于使用的网页浏览量计数，但并不只局限于网站。
 
-##### 🚀 Fast and Simple
+![rule34](/assets/rule34.svg)
 
-##### 🎉 部署简单
+[> 预览 <](https://mini.moonlab.top/post/20231224-14/)
+
+#### 🚀 Fast and Simple
+
+#### 🎉 部署简单
 
 只需一个二进制文件即可启动计数服务器，零依赖。没有繁琐的安装过程。
 
-##### 🔒 安全的 [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) 支持
+#### 🔒 安全的 [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) 支持
 
 让陌生人难以私自使用你的计数服务器，来为他们计数
 
-##### 🌟 SQLite Database.
+#### 🌟 SQLite Database.
 
 易于控制和搬迁
 
 ## 图片计数器
 
-#### 普通方法
+### 普通方法
 
 请确保每个网页的 id 参数是独一无二的
 
@@ -31,7 +35,7 @@
 <img src="//yoursite.com/counter/img?id=uniqueID"></img>
 ```
 
-#### 安全 CORS
+### 安全 CORS
 
 Unique id 参数会自动被处理
 

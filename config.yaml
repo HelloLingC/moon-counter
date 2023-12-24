@@ -1,6 +1,6 @@
 # Moon-Counter Config 
 # See config docs: https://mini.moonlab.top/post/20231224-14/
-host: localhost:3800
+host: counter.moonlab.top
 listen: 3800
 cors: true
 img_theme: rule34

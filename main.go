@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 
@@ -33,7 +34,7 @@ func main() {
 	db.InitDB(config.DBCfg.Dbname)
 	defer db.CloseDB()
 
-	server.LoadAssets(config.ImgTheme)
+	server.LoadAssets(fmt.Sprintf("assets/%s", config.ImgTheme))
 
 	s := server.NewInstance(&config, db)
 	s.Start()
