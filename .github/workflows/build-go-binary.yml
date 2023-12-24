@@ -1,0 +1,26 @@
+name: Release Build
+
+on:
+  release:
+    types: [published]
+    branches: [main]
+
+jobs:
+  build-go-binary:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, windows, freebsd, darwin]
+        goarch: [amd64, arm64]
+        exclude:
+          - goarch: arm64 # Windows don't run on arm64
+            goos: windows
+    steps:
+      - uses: actions/checkout@v3
+      - uses: wangyoucao577/go-release-action@v1.40
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          goos: ${{ matrix.goos }}
+          goarch: ${{ matrix.goarch }}
+          binary_name: "moon-counter"
+          extra_files: LICENSE readme.md config.yaml

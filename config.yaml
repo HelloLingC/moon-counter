@@ -1,0 +1,21 @@
+# Moon-Counter Config 
+# See config docs: 
+host: localhost:3800
+port: 3800
+cors: true
+imgTheme: rule34
+hostnames: 
+  - moonlab.top
+  - localhost
+db:
+  type: sqlite
+  dbname: moon.db
+  host:
+  username:
+  password:
+
+admin:
+  enable: false
+  path: /admin
+  # Use password generator
+  password: 
