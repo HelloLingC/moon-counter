@@ -64,6 +64,7 @@ func (s Server) imgHndl(w http.ResponseWriter, r *http.Request) {
 	// Todo: digits customization
 	svg := BuildCounterImg(fmt.Sprintf("%d", count))
 	w.Header().Set("Access-Control-Allow-Origin", origin)
+	w.Header().Set("Cache-Control", "max-age=0")
 	w.Header().Set("Content-Type", "image/svg+xml")
 	fmt.Fprint(w, svg)
 }
