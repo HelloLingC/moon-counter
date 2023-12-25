@@ -26,8 +26,13 @@ func NewInstance(config *common.Config, db database.IDatabase) *Server {
 
 func corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		// preflight requests
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
 		next.ServeHTTP(w, r)
 	})
 }
@@ -42,24 +47,31 @@ func (s Server) jsImgHndl(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, JS_IMG, s.Config.Host)
 }
 
-func (s Server) imgHndl(w http.ResponseWriter, r *http.Request) {
+func getIdentifier(s *Server, w http.ResponseWriter, r *http.Request) string {
 	origin := r.Header.Get("Origin")
-	if s.Config.Cors && !checkOrigin(w, origin, s.Config.Hostnames) {
-		return
-	}
-	var identifier string
 	if origin != "" {
 		// Client is using JS to request here
-		identifier = origin
-	} else {
-		identifier = r.URL.Query().Get("id")
-		if identifier == "" {
-			http.Error(w, "missing identifier", http.StatusBadRequest)
-			return
+		if s.Config.Cors && !checkOrigin(w, origin, s.Config.Hostnames) {
+			return ""
 		}
 	}
-	if len(identifier) > 100 {
-		http.Error(w, "exceeding id arg", http.StatusBadRequest)
+	identifier := r.URL.Query().Get("id")
+	cleanUrl(&identifier)
+	
+	if identifier == "" {
+		http.Error(w, "missing identifier", http.StatusBadRequest)
+		return ""
+	}
+	if len(identifier) > 300 {
+		http.Error(w, "id argument too big", http.StatusBadRequest)
+		return ""
+	}
+	return identifier
+}
+
+func (s *Server) imgHndl(w http.ResponseWriter, r *http.Request) {
+	identifier := getIdentifier(s, w, r)
+	if identifier == "" {
 		return
 	}
 	count, err := s.DB.AddCounter(identifier)
@@ -70,32 +82,25 @@ func (s Server) imgHndl(w http.ResponseWriter, r *http.Request) {
 	}
 	// Todo: digits customization
 	svg := BuildCounterImg(fmt.Sprintf("%d", count))
-	w.Header().Set("Access-Control-Allow-Origin", origin)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Cache-Control", "max-age=0")
 	w.Header().Set("Content-Type", "image/svg+xml")
 	fmt.Fprint(w, svg)
 }
 
-func (s Server) textHndl(w http.ResponseWriter, r *http.Request) {
-	origin := r.Header.Get("Origin")
-	if s.Config.Cors && !checkOrigin(w, origin, s.Config.Hostnames) {
-		// Didn't pass the origin check
+func (s *Server) textHndl(w http.ResponseWriter, r *http.Request) {
+	identifier := getIdentifier(s, w, r)
+	if identifier == "" {
 		return
 	}
-	// Todo; text counter support id argument
-	rmOrigin, err := common.StrRemoveProtocol(origin)
-	if err != nil {
-		http.Error(w, "Invaild origin: missing protocal", http.StatusBadRequest)
-		return
-	}
-	count, err := s.DB.AddCounter(rmOrigin)
+	count, err := s.DB.AddCounter(identifier)
 	if err != nil {
 		common.SilentError("SQL err when adding", err)
 		http.Error(w, "DB error", http.StatusServiceUnavailable)
 		return
 	}
 	// Do NOT send all the allowed origins to the client
-	w.Header().Set("Access-Control-Allow-Origin", origin)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "text/plain")
 	fmt.Fprintf(w, "%d", count)
 }

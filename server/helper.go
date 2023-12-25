@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 	"net/url"
 
@@ -22,4 +23,25 @@ func checkOrigin(w http.ResponseWriter, origin string, hostnames []string) bool 
 		http.Error(w, "Invaild orgin: Forbidden", http.StatusForbidden)
 	}
 	return isAllowed
+}
+
+func cleanUrl(in *string) error {
+	parsed, err := url.ParseRequestURI(*in)
+	if (err != nil) {
+		return err
+	}
+	if parsed.Scheme == "" || parsed.Host == "" {
+		return fmt.Errorf("Not a url")
+	}
+	q := parsed.Query()
+	q.Del("ref")
+	q.Del("from")
+
+	// Cloudflare
+	// These params will be added respectively
+	// after users finish IUAM/JS Challenge and Captcha
+	q.Del("__cf_chl_captcha_tk__")
+	q.Del("__cf_chl_jschl_tk__")
+	*in = q.Encode()
+	return nil
 }

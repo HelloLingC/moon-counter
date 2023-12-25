@@ -125,14 +125,15 @@ func (s Server) AdminHndl(w http.ResponseWriter, r *http.Request) {
 	if err == nil {
 		// Token cookie exists
 		token, err := parseJWT(cookie.Value, s.AdminEn.SecretKey)
-		if err != nil {
-			// Todo: error report, it can be a strange behaviour
-			http.Error(w, "cannot parse the token", http.StatusUnauthorized)
-			return
-		}
-		claims, ok := token.Claims.(jwt.MapClaims)
-		if ok && token.Valid {
-			fmt.Println("Username:", claims["sub"])
+		// Since the secret key will be regenerated eveytime whem server starts
+		// the authorized users will meet invaild signature error, because 
+		// the key is different than before. reauth is required
+		if err == nil {
+			claims, ok := token.Claims.(jwt.MapClaims)
+			if ok && token.Valid {
+				fmt.Println("Username:", claims["sub"])
+				return
+			}
 			return
 		}
 		// Didn't pass auth
