@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moon Counter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            height: 100vh;
+            text-align: center;
+            color: #fff;
+            background-color: #181a1b;
+        }
+
+        main {
+            width: fit-content;
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto;
+        }
+
+        p {
+            margin: 0 2rem;
+            color: azure;
+            font-size: 2rem;
+        }
+
+        input {
+            padding: 0.5rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            background: #ccc;
+        }
+
+        .button {
+            width: fit-content;
+            cursor: pointer;
+            margin-top: 1.9rem;
+            padding: 0.6rem 1.2rem;
+            background-color: #333;
+            border-radius: 7px;
+            color: #fff;
+        }
+
+        .button:hover {
+            background-color: #292828;
+        }
+
+        .warning-text {
+            color: #c91f1f;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>MoonCounter Administration</h1>
+    </header>
+    <main>
+        <p>🔒 Authentication Required</p>
+        <label></label>
+        <input type="password" id="password" name="password" required>
+        <p style="visibility: hidden;" class="warning-text">Auth failed</p>
+        <div id="main-submit" class="button" type="submit">Confirm</div>
+    </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("main-submit").addEventListener("click", function () {
+                const pwd = document.getElementById('password').value;
+                fetch("//{{.Url}}", {method: "POST", headers: new Headers({"Content-Type": "application/x-www-form-urlencoded"}), body: `pass=${pwd}`})
+                .then(r=> {
+                    if(!r.ok) document.getElementsByClassName("warning-text")[0].style.visibility = "visible";
+                    return r.text();
+                })
+                .then(d=> {
+                    if(d == "ok") {
+                        location.reload();
+                    }
+                })
+            })
+        });
+    </script>
+</body>
+
+</html>

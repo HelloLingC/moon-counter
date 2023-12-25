@@ -4,20 +4,23 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"path"
 
 	"github.com/HelloLingC/moon-counter/common"
 	"github.com/HelloLingC/moon-counter/database"
 )
 
 type Server struct {
-	Config *common.Config
-	DB     database.IDatabase
+	Config  *common.Config
+	DB      database.IDatabase
+	AdminEn *AdminPanel
 }
 
 func NewInstance(config *common.Config, db database.IDatabase) *Server {
 	return &Server{
-		Config: config,
-		DB:     db,
+		Config:  config,
+		DB:      db,
+		AdminEn: &AdminPanel{Enabled: config.AdminCfg.Enabled},
 	}
 }
 
@@ -54,6 +57,10 @@ func (s Server) imgHndl(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "missing identifier", http.StatusBadRequest)
 			return
 		}
+	}
+	if len(identifier) > 100 {
+		http.Error(w, "exceeding id arg", http.StatusBadRequest)
+		return
 	}
 	count, err := s.DB.AddCounter(identifier)
 	if err != nil {
@@ -94,7 +101,7 @@ func (s Server) textHndl(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s Server) Start() {
-	log.Printf("Moon Counter starts running at localhost:%d", s.Config.Port)
+	log.Printf("MoonCounter starts running at localhost:%d", s.Config.Port)
 
 	tHndl := http.HandlerFunc(s.textHndl)
 	iHndl := http.HandlerFunc(s.imgHndl)
@@ -103,6 +110,20 @@ func (s Server) Start() {
 	http.HandleFunc("/moon-counter/js/img", s.jsImgHndl)
 	http.Handle("/counter/text", corsMiddleware(tHndl))
 	http.Handle("/counter/img", corsMiddleware(iHndl))
+
+	if s.Config.AdminCfg.Enabled {
+		log.Println("Warning: MoonCounter Admin is enabled")
+		if s.Config.AdminCfg.Passphrase == "" {
+			log.Fatal("Admin is enabled, but the passphrase is empty")
+		}
+	}
+	adPath := path.Join("/", s.Config.AdminCfg.Path)
+	adHndl := http.HandlerFunc(s.AdminHndl)
+	adAuthHndl := http.HandlerFunc(s.AuthHndl)
+
+	s.AdminEn.Register()
+	http.Handle(adPath, AdminMiddleware(adHndl, s.AdminEn))
+	http.Handle(path.Join(adPath, "/auth"), AdminMiddleware(adAuthHndl, s.AdminEn))
 
 	err := http.ListenAndServe(fmt.Sprintf(":%d", s.Config.Port), nil)
 	if err != nil {

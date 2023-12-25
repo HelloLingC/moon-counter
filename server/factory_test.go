@@ -6,9 +6,14 @@ import (
 )
 
 func TestLoadAssets(t *testing.T) {
-	LoadAssets("../assets/rule34")
+	const name = "moebooru"
+	const write = false
+	LoadAssets("../assets/" + name)
 	svg := BuildCounterImg("0123456789")
-	file, err := os.Create("rule34.svg")
+	if !write {
+		return
+	}
+	file, err := os.Create(name + ".svg")
 	if err != nil {
 		t.Error("Err creating file", err)
 	}

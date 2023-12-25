@@ -4,9 +4,10 @@
 
 快速，简单 & 易于使用的网页浏览量计数，但并不只局限于网站。
 
-![rule34](/assets/rule34.svg)
+![rule34](https://mini.moonlab.top/post/20231224-14/rule34.svg)
 
 [> 预览 <](https://mini.moonlab.top/post/20231224-14/)
+
 
 #### 🚀 Fast and Simple
 
@@ -54,6 +55,30 @@ Unique id 参数会自动被处理
 <script src="//yoursite.com/moon-counter/js"></script>
 <span id="moon-counter"></span>
 ```
+
+# 自己部署
+
+下载最新版本：[Release Page](/releases).
+
+1.解压
+
+```bash
+$ tar -xf moon-counter.tar.gz
+```
+
+2.修改 config.yaml
+
+```bash
+$ nano config.yaml
+```
+
+3.运行
+
+```bash
+$ ./moon-counter
+```
+
+更多细节和配置教程，请查看 [我的博客](https://mini.moonlab.top/post/20231224-14/)
 
 # 许可协议
 

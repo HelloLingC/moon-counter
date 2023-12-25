@@ -4,11 +4,9 @@ English | [中文](readme_cn.md)
 
 A fast, simple & easy-to-use webpage visitor counter, but not only limited to websites.
 
-![rule34](/assets/rule34.svg)
+![rule34](https://mini.moonlab.top/post/20231224-14/rule34.svg)
 
 [> Preview <](https://mini.moonlab.top/post/20231224-14/)
-
-With a visual admin panel, put Moon-Counter at every corner
 
 #### 🚀 Fast and Simple
 
@@ -16,7 +14,7 @@ With a visual admin panel, put Moon-Counter at every corner
 
 Run counter server with only one binary file, zero dependency. No annoying complex installation
 
-#### 🔒 Secure [CORS]() Support
+#### 🔒 Secure [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) Support
 
  Make it hard for strangers to use your counter service without permisson to tally for them
 
@@ -33,7 +31,7 @@ Make sure id argument is unique for every webpage
 # You can use this in Github Profile
 ![](https://yoursite.com/counter/img?id=uniqueID)
 
-<img src="//yoursite.com/counter/img?id=uniqueID"></img>
+<img src="//counter.moonlab.top/counter/img?id=uniqueID"></img>
 ```
 
 ### Secure CORS

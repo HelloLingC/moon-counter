@@ -2,12 +2,12 @@
 # See config docs: https://mini.moonlab.top/post/20231224-14/
 host: counter.moonlab.top
 listen: 3800
-cors: true
 img_theme: rule34
+cors: true
 hostnames: 
   - moonlab.top
-  # Remove localhost in production
-  - localhost
+  - mini.moonlab.top
+  - github.com
 
 error_log: error.log
 
@@ -21,5 +21,4 @@ db:
 admin:
   enable: false
   path: /admin
-  # Use password generator
-  password: 
+  passphrase:
