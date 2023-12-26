@@ -27,21 +27,25 @@ func checkOrigin(w http.ResponseWriter, origin string, hostnames []string) bool 
 
 func cleanUrl(in *string) error {
 	parsed, err := url.ParseRequestURI(*in)
-	if (err != nil) {
+	if err != nil {
 		return err
 	}
 	if parsed.Scheme == "" || parsed.Host == "" {
 		return fmt.Errorf("Not a url")
 	}
 	q := parsed.Query()
+	if len(q) == 0 {
+		return fmt.Errorf("No query params")
+	}
 	q.Del("ref")
-	q.Del("from")
+	// q.Del("from")
 
 	// Cloudflare
 	// These params will be added respectively
 	// after users finish IUAM/JS Challenge and Captcha
-	q.Del("__cf_chl_captcha_tk__")
 	q.Del("__cf_chl_jschl_tk__")
-	*in = q.Encode()
+	q.Del("__cf_chl_captcha_tk__")
+	parsed.RawQuery = q.Encode()
+	*in = parsed.String()
 	return nil
 }

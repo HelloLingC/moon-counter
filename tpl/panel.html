@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moon Counter Admin</title>
+    <link rel="stylesheet" href="/static/css/admin.css">
+    <style>
+        #sql-input {
+            width: 85vw;
+            height: 5rem;
+            font-size: 1.5rem;
+            padding: 5px;
+        }
+
+        @media only screen and (min-width: 700px) {
+            #sql-input {
+                width: 50vw;
+            }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+        }
+
+        tr:nth-child(even) {
+            background-color: #444;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>MoonCounter Dashboard <span class="primary-color">[{{.Sub}}]</span></h1>
+    <main>
+        <div id="sql-outer">
+            <textarea id="sql-input" type="text" name="username" placeholder="SQL sentence"></textarea>
+            <div style="margin: 1.2rem;" class="button">Exec</div>
+        </div>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>identifier</th>
+                    <th>count</th>
+                    <th>created_at</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Items}}
+                <tr>
+                    <td>{{.Id}}</td>
+                    <td>{{.Identifier}}</td>
+                    <td>{{.Count}}</td>
+                    <td>{{.CreatedTime}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </main>
+    <script>
+        if ("{{.Sub}}" == "guest") {
+            document.getElementById("sql-outer").style.display = "none";
+        }
+    </script>
+</body>
+
+</html>

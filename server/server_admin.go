@@ -42,14 +42,15 @@ func (a *AdminPanel) Register() {
 		log.Fatal("Cannot generate pkey:", err)
 	}
 	a.SecretKey = bytes
-	a.tepl = template.Must(template.ParseFiles("tpl/index.tepl"))
+	a.tepl = template.Must(template.ParseGlob("tpl/*.html"))
 }
 
 // Middleware to check whether admin is enabled in the config file
+// if not enabled, return 404 to disguise as nothing
 func AdminMiddleware(next http.Handler, ad *AdminPanel) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ad.Mu.Lock()
-		defer ad.Mu.Unlock()
+		// ad.Mu.Lock()
+		// defer ad.Mu.Unlock()
 		if ad.Enabled {
 			next.ServeHTTP(w, r)
 			return
@@ -88,15 +89,22 @@ func (s Server) AuthHndl(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "bad request", http.StatusBadRequest)
 		return
 	}
-	if passphrase != s.Config.AdminCfg.Passphrase {
+	isGuest := s.Config.AdminCfg.GuestLogin != "" && s.Config.AdminCfg.GuestLogin == passphrase
+	if passphrase != s.Config.AdminCfg.Passphrase && !isGuest {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
 	}
 	// token will expire after 12 hrs
 	exp := time.Now().Add(time.Hour * 12)
+	var sub string
+	if isGuest {
+		sub = "guest"
+	} else {
+		sub = "admin"
+	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"iss": "moon-counter",
-		"sub": "admin",
+		"sub": sub,
 		"exp": exp.Unix(),
 	})
 	ts, err := token.SignedString(s.AdminEn.SecretKey)
@@ -126,17 +134,25 @@ func (s Server) AdminHndl(w http.ResponseWriter, r *http.Request) {
 		// Token cookie exists
 		token, err := parseJWT(cookie.Value, s.AdminEn.SecretKey)
 		// Since the secret key will be regenerated eveytime whem server starts
-		// the authorized users will meet invaild signature error, because 
+		// the authorized users will meet invaild signature error, because
 		// the key is different than before. reauth is required
 		if err == nil {
 			claims, ok := token.Claims.(jwt.MapClaims)
 			if ok && token.Valid {
-				fmt.Println("Username:", claims["sub"])
+				sub := claims["sub"]
+				if sub == "admin" || sub == "guest" {
+					counters, err := s.DB.QueryCounter(0, 15)
+					if err != nil {
+						http.Error(w, "SQL error: "+err.Error(), http.StatusServiceUnavailable)
+						return
+					}
+					s.AdminEn.tepl.ExecuteTemplate(w, "panel.html", map[string]interface{}{"Sub": sub, "Items": counters})
+				}
 				return
 			}
 			return
 		}
 		// Didn't pass auth
 	}
-	s.AdminEn.tepl.Execute(w, map[string]string{"Url": path.Join(s.Config.Host, s.Config.AdminCfg.Path, "/auth")})
+	s.AdminEn.tepl.ExecuteTemplate(w, "index.html", map[string]string{"Url": path.Join(s.Config.Host, s.Config.AdminCfg.Path, "/auth")})
 }

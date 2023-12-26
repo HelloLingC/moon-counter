@@ -27,11 +27,11 @@ func main() {
 		log.Fatal("Error unmarshaling YAML:", err)
 	}
 
-	db, err := database.NewDBAdapter(config.DBCfg.Type, config.DBCfg.Dbname)
+	db, err := database.NewDBAdapter(config.DBCfg.Type, &config.DBCfg)
 	if err != nil {
 		log.Fatal("Err DB Init:", err)
 	}
-	db.InitDB(config.DBCfg.Dbname)
+	db.InitDB()
 	defer db.CloseDB()
 
 	server.LoadAssets(fmt.Sprintf("assets/%s", config.ImgTheme))

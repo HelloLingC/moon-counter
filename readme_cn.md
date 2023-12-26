@@ -23,36 +23,37 @@
 
 易于控制和搬迁
 
+
+# 公用计数器
+
+你可以使用我的 MoonCounter 实例。但是我对其稳定性不负责任。实际上，没有人需要对此负责。但只要我的博客网站持续存在，计数器服务将始终是公开的。
+但我仍然建议你自己托管您拥有的服务。
+
+**当然，禁止非法网站使用我的服务**
+
 ## 图片计数器
 
-### 普通方法
-
-请确保每个网页的 id 参数是独一无二的
+**用网页的 URL 替换 UniqueID 参数。至少它必须是唯一的，以标识你的页面。**
 
 ```
-# You can use this in Github Profile
-![](https://yoursite.com/counter/img?id=uniqueID)
+![](https:///counter.moonlab.top/counter/img?id=UniqueID)
 
-<img src="//yoursite.com/counter/img?id=uniqueID"></img>
+<img src="//counter.moonlab.top/counter/img?id=UniqueID"></img>
 ```
 
-### 安全 CORS
-
-Unique id 参数会自动被处理
-
-如果在配置文件中启用了 CORS，服务器将检查请求的来源是否合法，并返回 CORS 资源。在这种情况下，你应该仅以这种方式使用图片计数器。
+如果你不想自己处理 UniqueID，你可以使用这个。它将自动处理 id 参数。你只需直接将其放在你的网页上进行计数。
 
 ```
-<script src="//yoursite.com/moon-counter/js/img"></script>
+<script src="//counter.moonlab.top/moon-counter/js/img"></script>
 <img id="moon-counter-img"></img>
 ```
 
-## 文字计数器
+## 文本计数器
 
-将以下 html 代码放在你想要计数的地方
+而这将仅输出纯文本计数。你也不需要自己处理 uniqueid 参数。
 
 ```
-<script src="//yoursite.com/moon-counter/js"></script>
+<script src="//counter.moonlab.top/moon-counter/js"></script>
 <span id="moon-counter"></span>
 ```
 

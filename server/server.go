@@ -57,7 +57,7 @@ func getIdentifier(s *Server, w http.ResponseWriter, r *http.Request) string {
 	}
 	identifier := r.URL.Query().Get("id")
 	cleanUrl(&identifier)
-	
+
 	if identifier == "" {
 		http.Error(w, "missing identifier", http.StatusBadRequest)
 		return ""
@@ -125,10 +125,13 @@ func (s Server) Start() {
 	adPath := path.Join("/", s.Config.AdminCfg.Path)
 	adHndl := http.HandlerFunc(s.AdminHndl)
 	adAuthHndl := http.HandlerFunc(s.AuthHndl)
+	adUpdateHndl := http.HandlerFunc(s.AdminUpdateHndl)
 
 	s.AdminEn.Register()
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./tpl/static"))))
 	http.Handle(adPath, AdminMiddleware(adHndl, s.AdminEn))
 	http.Handle(path.Join(adPath, "/auth"), AdminMiddleware(adAuthHndl, s.AdminEn))
+	http.Handle(path.Join(adPath, "/update"), AdminMiddleware(adUpdateHndl, s.AdminEn))
 
 	err := http.ListenAndServe(fmt.Sprintf(":%d", s.Config.Port), nil)
 	if err != nil {

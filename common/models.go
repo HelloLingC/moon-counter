@@ -1,5 +1,7 @@
 package common
 
+import "time"
+
 type Config struct {
 	Host      string      `yaml:"host"`
 	Port      int         `yaml:"listen"`
@@ -23,4 +25,12 @@ type AdminConfig struct {
 	Enabled    bool   `yaml:"enable"`
 	Path       string `yaml:"path"`
 	Passphrase string `yaml:"passphrase"`
+	GuestLogin string `yaml:"guest_login_password"`
+}
+
+type Counter struct {
+	Id          int       `db:"id"`
+	Identifier  string    `db:"identifier"`
+	Count       int       `db:"count"`
+	CreatedTime time.Time `db:"created_id"`
 }
