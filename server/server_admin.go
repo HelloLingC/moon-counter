@@ -42,7 +42,7 @@ func (a *AdminPanel) Register() {
 		log.Fatal("Cannot generate pkey:", err)
 	}
 	a.SecretKey = bytes
-	a.tepl = template.Must(template.ParseGlob("tpl/*.html"))
+	a.tepl = template.Must(template.ParseFS(tpls, "tpl/*.html"))
 }
 
 // Middleware to check whether admin is enabled in the config file

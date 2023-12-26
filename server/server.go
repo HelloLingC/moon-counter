@@ -1,7 +1,9 @@
 package server
 
 import (
+	"embed"
 	"fmt"
+	"io/fs"
 	"log"
 	"net/http"
 	"path"
@@ -9,6 +11,9 @@ import (
 	"github.com/HelloLingC/moon-counter/common"
 	"github.com/HelloLingC/moon-counter/database"
 )
+
+//go:embed tpl
+var tpls embed.FS
 
 type Server struct {
 	Config  *common.Config
@@ -128,7 +133,8 @@ func (s Server) Start() {
 	adUpdateHndl := http.HandlerFunc(s.AdminUpdateHndl)
 
 	s.AdminEn.Register()
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./tpl/static"))))
+	staticFolder, _ := fs.Sub(tpls, "tpl/static")
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.FS(staticFolder))))
 	http.Handle(adPath, AdminMiddleware(adHndl, s.AdminEn))
 	http.Handle(path.Join(adPath, "/auth"), AdminMiddleware(adAuthHndl, s.AdminEn))
 	http.Handle(path.Join(adPath, "/update"), AdminMiddleware(adUpdateHndl, s.AdminEn))

@@ -103,6 +103,5 @@ func (s *SQLite) QueryCounter(skip int, limit int) ([]common.Counter, error) {
 }
 
 func (s *SQLite) Exec(st string) error {
-
 	return nil
 }
